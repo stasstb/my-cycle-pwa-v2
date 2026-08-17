@@ -392,13 +392,39 @@ async function openPDF() {
   // Load PDF if not already loaded
   if (!pdfDoc) {
     try {
-      pdfDoc = await pdfjsLib.getDocument(PDF_URL).promise;
+      console.log("📖 Загружаем PDF с:", PDF_URL);
+      pdfDoc = await pdfjsLib.getDocument({
+        url: PDF_URL,
+        withCredentials: false,
+        headers: {
+          'Accept': 'application/pdf'
+        }
+      }).promise;
       totalPages = pdfDoc.numPages;
       currentPage = 1;
       await renderPage(currentPage);
+      console.log("✅ PDF загружен успешно, страниц:", totalPages);
     } catch (error) {
-      console.error("Error loading PDF:", error);
-      alert("Помилка при завантаженні PDF. Спробуйте пізніше.");
+      console.error("❌ Ошибка при загрузке PDF:", error);
+      pdfDoc = null;
+      
+      // Восстановить интерфейс
+      if (header) header.style.display = "block";
+      mainContent.style.display = "block";
+      pdfHeader.style.display = "none";
+      pdfContainer.style.display = "none";
+      footer.style.display = "block";
+      isPDFOpen = false;
+      
+      // Показать деталь ошибки
+      let errorMsg = "Помилка при завантаженні PDF.";
+      if (error.message.includes("CORS") || error.message.includes("NetworkError")) {
+        errorMsg += "\n\nПроблема с доступом. Спробуйте позже или проверьте інтернет.";
+      } else if (error.message.includes("404")) {
+        errorMsg += "\n\nFail - PDF файл не знайдено.";
+      }
+      
+      alert(errorMsg + "\n\nДеталь: " + error.message);
     }
   } else {
     await renderPage(currentPage);
@@ -421,9 +447,13 @@ function closePDF() {
 }
 
 async function renderPage(pageNum) {
-  if (!pdfDoc) return;
+  if (!pdfDoc) {
+    console.warn("⚠️ PDF документ не загружен");
+    return;
+  }
 
   try {
+    console.log(`📄 Рендерируем страницу ${pageNum}/${totalPages}`);
     const page = await pdfDoc.getPage(pageNum);
     const scale = window.innerWidth > 768 ? 1.5 : 1;
     const viewport = page.getViewport({ scale });
@@ -450,8 +480,11 @@ async function renderPage(pageNum) {
     // Update button states
     document.getElementById("prevBtn").disabled = currentPage === 1;
     document.getElementById("nextBtn").disabled = currentPage === totalPages;
+    
+    console.log(`✅ Страница ${pageNum} загружена успешно`);
   } catch (error) {
-    console.error("Error rendering page:", error);
+    console.error("❌ Ошибка при рендеринге страницы:", error);
+    alert("Помилка при показуванні сторінки: " + error.message);
   }
 }
 
