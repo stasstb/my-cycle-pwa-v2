@@ -56,6 +56,10 @@ function registerPWA() {
 const PDF_URL =
   "https://about-man.ru/pl/fileservice/user/file/download/h/9db14a308a7be57b2c9d1b8fe60d178d.pdf";
 
+let pdfDoc = null;
+let currentPage = 1;
+let totalPages = 0;
+
 
 /* =========================
    ПРОГРАМИ
@@ -371,9 +375,9 @@ function getReminder(id, index) {
    PDF NAVIGATION
 ========================= */
 
-function openPDF() {
+async function openPDF() {
   isPDFOpen = true;
-  const pdfViewer = document.getElementById("pdfViewer");
+  const pdfContainer = document.getElementById("pdfContainer");
   const mainContent = document.getElementById("mainContent");
   const pdfHeader = document.getElementById("pdfHeader");
   const header = document.querySelector("header:not(.pdf-header)");
@@ -383,26 +387,86 @@ function openPDF() {
   mainContent.style.display = "none";
   pdfHeader.style.display = "flex";
   footer.style.display = "none";
-  pdfViewer.style.display = "block";
+  pdfContainer.style.display = "flex";
 
-  // Open PDF directly in iframe
-  pdfViewer.src = PDF_URL;
+  // Load PDF if not already loaded
+  if (!pdfDoc) {
+    try {
+      pdfDoc = await pdfjsLib.getDocument(PDF_URL).promise;
+      totalPages = pdfDoc.numPages;
+      currentPage = 1;
+      await renderPage(currentPage);
+    } catch (error) {
+      console.error("Error loading PDF:", error);
+      alert("Помилка при завантаженні PDF. Спробуйте пізніше.");
+    }
+  } else {
+    await renderPage(currentPage);
+  }
 }
 
 function closePDF() {
   isPDFOpen = false;
-  const pdfViewer = document.getElementById("pdfViewer");
+  const pdfContainer = document.getElementById("pdfContainer");
   const mainContent = document.getElementById("mainContent");
   const pdfHeader = document.getElementById("pdfHeader");
   const header = document.querySelector("header:not(.pdf-header)");
   const footer = document.getElementById("footer");
 
   if (header) header.style.display = "block";
-  pdfViewer.style.display = "none";
+  pdfContainer.style.display = "none";
   pdfHeader.style.display = "none";
   mainContent.style.display = "block";
   footer.style.display = "block";
-  pdfViewer.src = "";
+}
+
+async function renderPage(pageNum) {
+  if (!pdfDoc) return;
+
+  try {
+    const page = await pdfDoc.getPage(pageNum);
+    const scale = window.innerWidth > 768 ? 1.5 : 1;
+    const viewport = page.getViewport({ scale });
+
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    const renderContext = {
+      canvasContext: context,
+      viewport,
+    };
+
+    await page.render(renderContext).promise;
+
+    const pdfPages = document.getElementById("pdfPages");
+    pdfPages.innerHTML = "";
+    pdfPages.appendChild(canvas);
+
+    // Update page info
+    document.getElementById("pageInfo").textContent = `${currentPage} / ${totalPages}`;
+
+    // Update button states
+    document.getElementById("prevBtn").disabled = currentPage === 1;
+    document.getElementById("nextBtn").disabled = currentPage === totalPages;
+  } catch (error) {
+    console.error("Error rendering page:", error);
+  }
+}
+
+async function nextPage() {
+  if (currentPage < totalPages) {
+    currentPage++;
+    await renderPage(currentPage);
+  }
+}
+
+async function previousPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    await renderPage(currentPage);
+  }
 }
 
 /* =========================
