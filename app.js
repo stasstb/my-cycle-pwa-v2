@@ -54,7 +54,7 @@ function registerPWA() {
 ========================= */
 
 const PDF_URL =
-  "https://about-man.ru/pl/fileservice/user/file/download/h/9db14a308a7be57b2c9d1b8fe60d178d.pdf";
+  "./Календарь пробуждения зон.pdf";
 
 let pdfDoc = null;
 let currentPage = 1;
@@ -407,7 +407,7 @@ async function openPDF() {
     } catch (error) {
       console.error("❌ Ошибка при загрузке PDF:", error);
       pdfDoc = null;
-      
+
       // Восстановить интерфейс
       if (header) header.style.display = "block";
       mainContent.style.display = "block";
@@ -415,7 +415,7 @@ async function openPDF() {
       pdfContainer.style.display = "none";
       footer.style.display = "block";
       isPDFOpen = false;
-      
+
       // Показать деталь ошибки
       let errorMsg = "Помилка при завантаженні PDF.";
       if (error.message.includes("CORS") || error.message.includes("NetworkError")) {
@@ -423,7 +423,7 @@ async function openPDF() {
       } else if (error.message.includes("404")) {
         errorMsg += "\n\nFail - PDF файл не знайдено.";
       }
-      
+
       alert(errorMsg + "\n\nДеталь: " + error.message);
     }
   } else {
@@ -480,7 +480,7 @@ async function renderPage(pageNum) {
     // Update button states
     document.getElementById("prevBtn").disabled = currentPage === 1;
     document.getElementById("nextBtn").disabled = currentPage === totalPages;
-    
+
     console.log(`✅ Страница ${pageNum} загружена успешно`);
   } catch (error) {
     console.error("❌ Ошибка при рендеринге страницы:", error);
