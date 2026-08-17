@@ -37,6 +37,18 @@ self.addEventListener("message", event => {
   if (event.data?.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
+
+  // Обработка отправки уведомлений
+  if (event.data?.type === "SEND_NOTIFICATION") {
+    const { title, options } = event.data;
+    self.registration.showNotification(title, {
+      icon: "./icons/icon-192.svg",
+      badge: "./icons/icon-192.svg",
+      ...options
+    }).catch(error => {
+      console.error("Ошибка при отправке уведомления через SW:", error);
+    });
+  }
 });
 
 function isHTML(request) {
@@ -91,4 +103,31 @@ self.addEventListener("fetch", event => {
       })
     );
   }
+});
+
+// Обработка клика на уведомление
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+
+  // Открыть или сфокусировать приложение при клике на уведомление
+  event.waitUntil(
+    clients.matchAll({ type: "window" })
+      .then(clientList => {
+        // Если окно приложения уже открыто, сфокусировать его
+        for (let client of clientList) {
+          if (client.url === "/" || client.url.includes("index.html")) {
+            return client.focus();
+          }
+        }
+        // Если не открыто, открыть новое окно
+        if (clients.openWindow) {
+          return clients.openWindow("./");
+        }
+      })
+  );
+});
+
+// Логирование закрытия уведомления
+self.addEventListener("notificationclose", event => {
+  console.log("📬 Уведомление закрыто:", event.notification.tag);
 });

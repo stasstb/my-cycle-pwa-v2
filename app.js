@@ -1057,6 +1057,229 @@ function render() {
 }
 
 
+/* =========================
+   NOTIFICATIONS SYSTEM
+========================= */
+
+/**
+ * Запросить разрешение на уведомления
+ */
+async function requestNotificationPermission() {
+  if (!("Notification" in window)) {
+    console.warn("⚠️ Браузер не поддерживает Notification API");
+    return false;
+  }
+
+  if (Notification.permission === "granted") {
+    console.log("✅ Уведомления уже разрешены");
+    return true;
+  }
+
+  if (Notification.permission === "denied") {
+    console.log("❌ Уведомления запрещены пользователем");
+    return false;
+  }
+
+  try {
+    const permission = await Notification.requestPermission();
+    const granted = permission === "granted";
+    console.log(granted ? "✅ Уведомления разрешены" : "❌ Уведомления запрещены");
+    return granted;
+  } catch (error) {
+    console.error("Ошибка при запросе разрешения на уведомления:", error);
+    return false;
+  }
+}
+
+/**
+ * Отправить уведомление напрямую (если браузер открыт)
+ */
+function sendNotification(title, options = {}) {
+  if (Notification.permission !== "granted") {
+    return;
+  }
+
+  const defaultOptions = {
+    icon: "./icons/icon-192.svg",
+    badge: "./icons/icon-192.svg",
+    tag: "cycle-reminder",
+    requireInteraction: false,
+    silent: false
+  };
+
+  try {
+    const notification = new Notification(title, { ...defaultOptions, ...options });
+    console.log("📬 Уведомление отправлено:", title);
+
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
+
+    return notification;
+  } catch (error) {
+    console.error("Ошибка при отправке уведомления:", error);
+  }
+}
+
+/**
+ * Отправить уведомление через Service Worker (более надежно)
+ */
+function sendNotificationViaSW(title, options = {}) {
+  if (!navigator.serviceWorker?.controller) {
+    console.warn("⚠️ Service Worker не готов, используем встроенное уведомление");
+    return sendNotification(title, options);
+  }
+
+  try {
+    navigator.serviceWorker.controller.postMessage({
+      type: "SEND_NOTIFICATION",
+      title,
+      options
+    });
+    console.log("📬 Уведомление отправлено через SW:", title);
+  } catch (error) {
+    console.error("Ошибка при отправке уведомления через SW:", error);
+  }
+}
+
+/**
+ * Запланировать напоминание на определенное время каждый день
+ */
+function scheduleDailyReminder(hour, minute, getReminderData) {
+  function checkAndSend() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    if (currentHour === hour && currentMinute === minute) {
+      const reminderData = getReminderData();
+      if (reminderData) {
+        sendNotificationViaSW(reminderData.title, reminderData.options);
+      }
+    }
+
+    // Проверять каждую минуту
+    setTimeout(checkAndSend, 60000);
+  }
+
+  checkAndSend();
+}
+
+/**
+ * Инициализировать напоминания программы
+ */
+function initializeReminders() {
+  if (!cycle || cycle.paused) {
+    return;
+  }
+
+  // Напоминание в 09:00: "Добрый день, пора начинать!"
+  scheduleDailyReminder(9, 0, () => {
+    const program = programs.find(p => p.id === activeProgram);
+    const day = currentDay();
+
+    if (!program) return null;
+
+    return {
+      title: `🧡 День ${day}! Доброе утро!`,
+      options: {
+        body: `${program.title} ждет тебя. Открой приложение.`,
+        badge: "./icons/icon-192.svg"
+      }
+    };
+  });
+
+  // Напоминание в 18:00: "Вечер! Не забыл сегодняшний план?"
+  scheduleDailyReminder(18, 0, () => {
+    const program = programs.find(p => p.id === activeProgram);
+    const day = currentDay();
+    const dayData = program?.days[day - 1];
+
+    if (!dayData) return null;
+
+    const key = activeProgram + "_" + (day - 1);
+    const completed = marks[key] === true;
+
+    if (completed) {
+      return {
+        title: `✅ День ${day} завершен!`,
+        options: {
+          body: "Отличная работа! Твой прогресс впечатляет."
+        }
+      };
+    }
+
+    return {
+      title: `🧡 День ${day}: ${dayData[0]}`,
+      options: {
+        body: `⏱️ ${dayData[1]} • Не забудь сегодняшний массаж!`,
+        badge: "./icons/icon-192.svg"
+      }
+    };
+  });
+
+  // Напоминание в 21:00: "Последний шанс сегодня"
+  scheduleDailyReminder(21, 0, () => {
+    const program = programs.find(p => p.id === activeProgram);
+    const day = currentDay();
+    const key = activeProgram + "_" + (day - 1);
+    const completed = marks[key] === true;
+
+    if (completed) {
+      return null; // Не отправлять, если уже сделано
+    }
+
+    return {
+      title: `🌙 Последний звонок!`,
+      options: {
+        body: "Еще есть время на сегодняшний массаж перед сном.",
+        requireInteraction: true
+      }
+    };
+  });
+
+  console.log("✅ Система напоминаний инициализирована");
+}
+
+/**
+ * Отправить notification при начале нового дня
+ */
+function notifyNewDay() {
+  const program = programs.find(p => p.id === activeProgram);
+  const day = currentDay();
+  const dayData = program?.days[day - 1];
+
+  if (!dayData) return;
+
+  sendNotificationViaSW(`🧡 Новый день! День ${day}`, {
+    body: `${dayData[0]} · ${dayData[1]}`,
+    badge: "./icons/icon-192.svg"
+  });
+
+  console.log("📬 Уведомление о новом дне отправлено");
+}
+
+/**
+ * Инициализировать статус-уведомление о хранилище
+ */
+async function notifyStorageStatus() {
+  if (!window.StorageManager) return;
+
+  const isPersistent = await StorageManager.checkPersistentStorage();
+
+  if (!isPersistent && Notification.permission === "granted") {
+    setTimeout(() => {
+      sendNotificationViaSW("💾 Совет по сохранению данных", {
+        body: "Разреши постоянное хранилище, чтобы данные не потерялись при очистке истории.",
+        badge: "./icons/icon-192.svg",
+        tag: "storage-tip"
+      });
+    }, 3000);
+  }
+}
+
+
 /**
  * Инициализация приложения
  */
@@ -1071,6 +1294,15 @@ async function initializeApp() {
 
   // Отображаем приложение
   render();
+
+  // Запрашиваем разрешение на уведомления
+  await requestNotificationPermission();
+
+  // Инициализируем систему напоминаний
+  initializeReminders();
+
+  // Уведомляем о статусе хранилища
+  await notifyStorageStatus();
 
   // Регистрируем PWA
   registerPWA();
