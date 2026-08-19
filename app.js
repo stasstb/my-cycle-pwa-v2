@@ -1,4 +1,3 @@
-
 /* =========================
    APP VERSION / PWA UPDATE
    ========================= */
@@ -62,7 +61,7 @@ let totalPages = 0;
 
 
 /* =========================
-   ПРОГРАМИ
+   ПРОГРАММЫ
 ========================= */
 
 const programs = [
@@ -70,91 +69,91 @@ const programs = [
   {
     id: "vulva",
     title: "Вульва",
-    description: "8 днів. Масаж через день.",
+    description: "8 дней. Массаж через день.",
     days: [
-      ["Вульва", "8 хв", "vulva"],
-      ["Відпочинок", "", "rest"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Відпочинок", "", "rest"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Відпочинок", "", "rest"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Відпочинок", "", "rest"]
+      ["Вульва", "8 мин", "vulva"],
+      ["Отдых", "", "rest"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Отдых", "", "rest"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Отдых", "", "rest"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Отдых", "", "rest"]
     ]
   },
 
   {
     id: "clit",
     title: "Клитор",
-    description: "4 → 8 → 12 хвилин.",
+    description: "4 → 8 → 12 минут.",
     days: [
-      ["Клитор", "4 хв", "clit"],
-      ["Клитор", "4 хв", "clit"],
-      ["Клитор", "4 хв", "clit"],
-      ["Клитор", "8 хв", "clit"],
-      ["Клитор", "8 хв", "clit"],
-      ["Клитор", "8 хв", "clit"],
-      ["Клитор", "12 хв", "clit"],
-      ["Клитор", "12 хв", "clit"],
-      ["Відпочинок", "", "rest"]
+      ["Клитор", "4 мин", "clit"],
+      ["Клитор", "4 мин", "clit"],
+      ["Клитор", "4 мин", "clit"],
+      ["Клитор", "8 мин", "clit"],
+      ["Клитор", "8 мин", "clit"],
+      ["Клитор", "8 мин", "clit"],
+      ["Клитор", "12 мин", "clit"],
+      ["Клитор", "12 мин", "clit"],
+      ["Отдых", "", "rest"]
     ]
   },
 
   {
     id: "combo",
     title: "Вульва + клитор",
-    description: "Чергуємо вульву та клитор.",
+    description: "Чередуем вульву и клитор.",
     days: [
-      ["Вульва", "8 хв", "vulva"],
-      ["Клитор", "12 хв", "clit"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Клитор", "12 хв", "clit"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Клитор", "12 хв", "clit"],
-      ["Відпочинок", "", "rest"]
+      ["Вульва", "8 мин", "vulva"],
+      ["Клитор", "12 мин", "clit"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Клитор", "12 мин", "clit"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Клитор", "12 мин", "clit"],
+      ["Отдых", "", "rest"]
     ]
   },
 
   {
     id: "g",
     title: "Зона G",
-    description: "7 днів. Повторювати 2–4 тижні.",
+    description: "7 дней. Повторять 2–4 недели.",
     days: [
-      ["Вульва", "8 хв", "vulva"],
-      ["Зона G", "12 хв", "g"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Зона G", "12 хв", "g"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Клитор", "12 хв", "clit"],
-      ["Відпочинок", "", "rest"]
+      ["Вульва", "8 мин", "vulva"],
+      ["Зона G", "12 мин", "g"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Зона G", "12 мин", "g"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Клитор", "12 мин", "clit"],
+      ["Отдых", "", "rest"]
     ]
   },
 
   {
     id: "k",
     title: "Зона К",
-    description: "7 днів. Повторювати 2–4 тижні.",
+    description: "7 дней. Повторять 2–4 недели.",
     days: [
-      ["Вульва", "8 хв", "vulva"],
-      ["Зона К", "12 хв", "k"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Зона К", "12 хв", "k"],
-      ["Вульва", "8 хв", "vulva"],
-      ["Клитор", "12 хв", "clit"],
-      ["Відпочинок", "", "rest"]
+      ["Вульва", "8 мин", "vulva"],
+      ["Зона К", "12 мин", "k"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Зона К", "12 мин", "k"],
+      ["Вульва", "8 мин", "vulva"],
+      ["Клитор", "12 мин", "clit"],
+      ["Отдых", "", "rest"]
     ]
   },
 
   {
     id: "maintenance",
-    title: "Підтримання",
-    description: "1–2 рази на тиждень.",
+    title: "Поддержание",
+    description: "1–2 раза в неделю.",
     days: [
-      ["Дихання", "12 хв", "breath"],
-      ["Вульва", "3 хв", "vulva"],
-      ["Клитор", "3 хв", "clit"],
-      ["Зона G", "3 хв", "g"],
-      ["Зона К", "3 хв", "k"]
+      ["Дыхание", "12 мин", "breath"],
+      ["Вульва", "3 мин", "vulva"],
+      ["Клитор", "3 мин", "clit"],
+      ["Зона G", "3 мин", "g"],
+      ["Зона К", "3 мин", "k"]
     ]
   }
 
@@ -162,7 +161,7 @@ const programs = [
 
 
 /* =========================
-   СТАН
+   СОСТОЯНИЕ
 ========================= */
 
 let cycle = null;
@@ -320,8 +319,8 @@ function getReminder(id, index) {
   ) {
 
     return [
-      "Підготовка",
-      "Водний лубрикант з гіалуроновою кислотою"
+      "Подготовка",
+      "Водный лубрикант с гиалуроновой кислотой"
     ];
 
   }
@@ -333,8 +332,8 @@ function getReminder(id, index) {
   ) {
 
     return [
-      "За 15 хвилин",
-      "Крем з L-Arginin"
+      "За 15 минут",
+      "Крем с L-Arginin"
     ];
 
   }
@@ -346,7 +345,7 @@ function getReminder(id, index) {
   ) {
 
     return [
-      "За 20 хвилин",
+      "За 20 минут",
       "Крем G-Spot"
     ];
 
@@ -359,8 +358,8 @@ function getReminder(id, index) {
   ) {
 
     return [
-      "Підготовка",
-      "Водний лубрикант"
+      "Подготовка",
+      "Водный лубрикант"
     ];
 
   }
@@ -417,11 +416,11 @@ async function openPDF() {
       isPDFOpen = false;
 
       // Показать деталь ошибки
-      let errorMsg = "Помилка при завантаженні PDF.";
+      let errorMsg = "Ошибка при загрузке PDF.";
       if (error.message.includes("CORS") || error.message.includes("NetworkError")) {
-        errorMsg += "\n\nПроблема с доступом. Спробуйте позже или проверьте інтернет.";
+        errorMsg += "\n\nПроблема с доступом. Попробуйте позже или проверьте интернет.";
       } else if (error.message.includes("404")) {
-        errorMsg += "\n\nFail - PDF файл не знайдено.";
+        errorMsg += "\n\nFail - PDF файл не найден.";
       }
 
       alert(errorMsg + "\n\nДеталь: " + error.message);
@@ -453,7 +452,7 @@ async function renderPage(pageNum) {
   }
 
   try {
-    console.log(`📄 Рендерируем страницу ${pageNum}/${totalPages}`);
+    console.log(`📄 Рендерим страницу ${pageNum}/${totalPages}`);
     const page = await pdfDoc.getPage(pageNum);
     const scale = window.innerWidth > 768 ? 1.5 : 1;
     const viewport = page.getViewport({ scale });
@@ -484,7 +483,7 @@ async function renderPage(pageNum) {
     console.log(`✅ Страница ${pageNum} загружена успешно`);
   } catch (error) {
     console.error("❌ Ошибка при рендеринге страницы:", error);
-    alert("Помилка при показуванні сторінки: " + error.message);
+    alert("Ошибка при отображении страницы: " + error.message);
   }
 }
 
@@ -519,7 +518,7 @@ function renderHero() {
       <section class="card">
 
         <div class="small">
-          ТВОЄЙ ЦИКЛ
+          ВАШ ЦИКЛ
         </div>
 
         <h2>
@@ -527,15 +526,15 @@ function renderHero() {
         </h2>
 
         <p>
-          Почати можна сьогодні,
-          незалежно від дня тижня.
+          Начать можно сегодня,
+          независимо от дня недели.
         </p>
 
         <button
           class="primary"
           onclick="startCycle()">
 
-          Почати цикл сьогодні
+          Начать цикл сегодня
 
         </button>
 
@@ -543,7 +542,7 @@ function renderHero() {
           class="pdf"
           onclick="openPDF()">
 
-          📖 Массаж + дихання • PDF
+          📖 Массаж + дыхание • PDF
 
         </button>
 
@@ -567,18 +566,18 @@ function renderHero() {
         </div>
 
         <h2>
-          🩷 Менструація
+          🩷 Менструация
         </h2>
 
         <p>
-          Масаж тимчасово призупинено.
+          Массаж временно приостановлен.
         </p>
 
         <button
           class="resume"
           onclick="togglePause()">
 
-          Продовжити цикл
+          Продолжить цикл
 
         </button>
 
@@ -586,7 +585,7 @@ function renderHero() {
           class="pdf"
           onclick="openPDF()">
 
-          📖 Массаж + дихання • PDF
+          📖 Массаж + дыхание • PDF
 
         </button>
 
@@ -604,7 +603,7 @@ function renderHero() {
     <section class="card">
 
       <div class="small">
-        СЬОГОДНІ
+        СЕГОДНЯ
       </div>
 
       <h2>
@@ -615,15 +614,15 @@ function renderHero() {
         class="pause"
         onclick="togglePause()">
 
-        🩷 Почалася менструація
-        • Поставити паузу
+        🩷 Началась менструация
+        • Поставить на паузу
 
       </button>
 
       <div class="actions">
 
         <button onclick="startCycle()">
-          Новий цикл
+          Новый цикл
         </button>
 
       </div>
@@ -632,7 +631,7 @@ function renderHero() {
         class="pdf"
         onclick="openPDF()">
 
-        📖 Массаж + дихання • PDF
+        📖 Массаж + дыхание • PDF
 
       </button>
 
@@ -709,11 +708,11 @@ function renderCalendar() {
         </span>
 
         <span class="tag breathTag">
-          Дихання
+          Дыхание
         </span>
 
         <span class="tag restTag">
-          Відпочинок
+          Отдых
         </span>
 
       </div>
@@ -834,13 +833,13 @@ function openDay(id, index) {
   }
 
 
-  if (item[0] !== "Дихання") {
+  if (item[0] !== "Дыхание") {
 
     steps.push({
 
-      title: "Дихання",
+      title: "Дыхание",
 
-      text: "Виконати дихальні вправи за схемою з PDF."
+      text: "Выполнить дыхательные упражнения по схеме из PDF."
 
     });
 
@@ -849,7 +848,7 @@ function openDay(id, index) {
 
       title: "Лубрикант",
 
-      text: "Водний лубрикант."
+      text: "Водный лубрикант."
 
     });
 
@@ -933,7 +932,7 @@ function openDay(id, index) {
         <button
           onclick="render()">
 
-          ← До календаря
+          ← К календарю
 
         </button>
 
@@ -945,7 +944,7 @@ function openDay(id, index) {
             )
           ">
 
-          ✓ Завершити день
+          ✓ Завершить день
 
         </button>
 
@@ -1067,8 +1066,8 @@ function updateProgress() {
   ).textContent =
 
     cycle
-      ? `${done} із ${total} відмічено · ${percent}%`
-      : "Цикл ще не розпочато";
+      ? `${done} из ${total} отмечено · ${percent}%`
+      : "Цикл еще не начат";
 
 }
 
