@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uk">
+<html lang="ru">
 
 <head>
   <meta charset="utf-8">
@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#faf8f9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Мій цикл">
+  <meta name="apple-mobile-web-app-title" content="Мой цикл">
 
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon-192.svg" type="image/svg+xml">
@@ -16,7 +16,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon-192.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-192.svg">
-  <title>Мій цикл 🧡</title>
+  <title>Мой цикл 🧡</title>
 
   <link rel="stylesheet" href="./styles.css?v=1.1.0">
   <!-- PDF.js Library -->
@@ -31,11 +31,11 @@
   <header>
 
     <h1>
-      Мій цикл <span class="orange">🧡</span>
+      Мой цикл <span class="orange">🧡</span>
     </h1>
 
     <div class="small">
-      Почни День 1 у будь-який день
+      Начни День 1 в любой день
     </div>
 
     <div class="progress">
@@ -43,14 +43,14 @@
     </div>
 
     <div class="small" id="progressText">
-      Цикл ще не розпочато
+      Цикл еще не начат
     </div>
 
   </header>
 
   <header id="pdfHeader" class="pdf-header" style="display:none;">
     <button onclick="closePDF()" class="backBtn">← Назад</button>
-    <h2>Масаж + дихання • PDF</h2>
+    <h2>Массаж + дыхание • PDF</h2>
   </header>
 
   <main id="mainContent">
@@ -67,9 +67,9 @@
   <div id="pdfContainer" class="pdf-container" style="display:none;">
     <div id="pdfPages" class="pdf-pages"></div>
     <div id="pdfControls" class="pdf-controls">
-      <button onclick="previousPage()" id="prevBtn">← Попередня</button>
+      <button onclick="previousPage()" id="prevBtn">← Предыдущая</button>
       <span id="pageInfo"></span>
-      <button onclick="nextPage()" id="nextBtn">Наступна →</button>
+      <button onclick="nextPage()" id="nextBtn">Следующая →</button>
     </div>
   </div>
 
