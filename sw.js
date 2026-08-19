@@ -1,12 +1,12 @@
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.1.1";
 const CACHE_NAME = `miy-cykl-${APP_VERSION}`;
 
 const PRECACHE = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./styles.css?v=1.1.0",
-  "./app.js?v=1.1.0",
+  "./styles.css?v=1.1.1",
+  "./app.js?v=1.1.1",
   "./icons/icon-192.svg",
   "./icons/icon-512.svg"
 ];
