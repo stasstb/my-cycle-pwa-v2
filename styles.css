@@ -343,10 +343,37 @@ button {
   font-size: 10px;
 }
 
+.dayDate {
+  margin-top: 4px;
+  color: #77727a;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.day.today {
+  outline: 2px solid #ff7d22;
+  outline-offset: 0;
+}
+
+.day.practice {
+  background: #fff5e3;
+}
+
 .dayName {
   margin-top: 7px;
   font-weight: 800;
   line-height: 1.15;
+}
+
+.dayNotePreview {
+  margin-top: 6px;
+  color: #5c585f;
+  font-size: 10px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .minutes {
@@ -452,6 +479,140 @@ button {
   background: white;
   border-radius: 12px;
   padding: 10px 12px;
+}
+
+.noteHint {
+  margin-top: 12px;
+}
+
+.practiceNote {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #efdfaf;
+  border-radius: 14px;
+  background: #fff9e7;
+}
+
+.practiceNote label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.practiceNote textarea {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid #e1dde2;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  resize: vertical;
+  background: white;
+}
+
+.exampleChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.exampleChip {
+  border: 1px solid #efdfaf;
+  background: white;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.weekdayRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 16px;
+}
+
+.weekdayBtn {
+  min-width: 42px;
+  border: 1px solid #e1dde2;
+  background: white;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.weekdayBtn.active {
+  background: #29262b;
+  color: white;
+  border-color: #29262b;
+}
+
+.weekBlock {
+  margin-top: 14px;
+}
+
+.weekLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #77727a;
+  margin-bottom: 6px;
+}
+
+.moreWeeks {
+  width: 100%;
+  margin-top: 12px;
+  border: 1px solid #e1dde2;
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  font-weight: 650;
+}
+
+.historyList {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historyItem {
+  border: 1px solid #e1dde2;
+  border-radius: 14px;
+  padding: 4px;
+}
+
+.historyToggle {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 10px 11px;
+}
+
+.historyToggle strong {
+  display: block;
+  font-size: 14px;
+}
+
+.historyToggle span {
+  display: block;
+  margin-top: 3px;
+  color: #77727a;
+  font-size: 12px;
+}
+
+.historyDetails {
+  padding: 0 11px 10px;
+}
+
+.historyNote {
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 4px;
 }
 
 .noteBox {
@@ -566,7 +727,10 @@ button {
   .primary,
   .pause,
   .resume,
-  .pdf {
+  .pdf,
+  .moreWeeks,
+  .weekdayBtn,
+  .practiceNote textarea {
     min-height: 46px;
   }
 

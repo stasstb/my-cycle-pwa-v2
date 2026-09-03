@@ -24,8 +24,10 @@ async function diagnosis() {
 
         const cycleData = localStorage.getItem("cycleData");
         const cycleMarks = localStorage.getItem("cycleMarks");
+        const cycleHistory = localStorage.getItem("cycleHistory");
         console.log(`   cycleData: ${cycleData ? "✅ найдено" : "❌ не найдено"}`);
         console.log(`   cycleMarks: ${cycleMarks ? "✅ найдено" : "❌ не найдено"}`);
+        console.log(`   cycleHistory: ${cycleHistory ? "✅ найдено" : "❌ не найдено"}`);
     } catch (error) {
         console.error("❌ localStorage не работает:", error);
     }

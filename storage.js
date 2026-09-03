@@ -179,37 +179,108 @@ const StorageManager = (() => {
         }
     }
 
+    function isBlank(value) {
+        if (value === undefined || value === null) return true;
+        if (Array.isArray(value)) return value.length === 0;
+        if (typeof value === "object") return Object.keys(value).length === 0;
+        return false;
+    }
+
+    function mergeMarks(a, b) {
+        if (isBlank(a)) return b;
+        if (isBlank(b)) return a;
+
+        const out = { ...a };
+
+        Object.entries(b).forEach(([key, value]) => {
+            if (out[key] === undefined) {
+                out[key] = value;
+                return;
+            }
+
+            if (value === true) {
+                out[key] = true;
+                return;
+            }
+
+            if (typeof value === "string") {
+                if (String(value).length > String(out[key] || "").length) {
+                    out[key] = value;
+                }
+                return;
+            }
+
+            if (Array.isArray(value)) {
+                const other = Array.isArray(out[key]) ? out[key] : [];
+                const length = Math.max(other.length, value.length);
+                const merged = [];
+                for (let i = 0; i < length; i += 1) {
+                    merged[i] = Boolean(other[i] || value[i]);
+                }
+                out[key] = merged;
+            }
+        });
+
+        return out;
+    }
+
+    function pickCycle(a, b) {
+        if (isBlank(a)) return b;
+        if (isBlank(b)) return a;
+        return (b.updatedAt || 0) > (a.updatedAt || 0) ? b : a;
+    }
+
+    function pickHistory(a, b) {
+        const left = Array.isArray(a) ? a : [];
+        const right = Array.isArray(b) ? b : [];
+        if (right.length > left.length) return right;
+        if (left.length) return left;
+        if (right.length) return right;
+        return undefined;
+    }
+
     /**
-     * Получение данных (IndexedDB → localStorage fallback)
+     * Получение данных: localStorage + IndexedDB, берём более полное значение
      */
     async function get(key) {
-        // Всегда пытаемся получить из localStorage сначала
+        let localVal;
         const localItem = localStorage.getItem(key);
         if (localItem) {
             try {
-                const parsed = JSON.parse(localItem);
-                console.log(`📦 Данные загружены из localStorage (${key})`);
-                return parsed;
-            } catch (e) {
-                console.error(`Ошибка парсинга localStorage (${key}):`, e);
+                localVal = JSON.parse(localItem);
+            } catch (error) {
+                console.error(`Ошибка парсинга localStorage (${key}):`, error);
             }
         }
 
-        // Если в localStorage нет, пытаемся получить из IndexedDB
+        let idbVal;
         try {
-            if (db) {
-                const value = await getIndexedDB(key);
-                if (value !== undefined) {
-                    console.log(`📦 Данные загружены из IndexedDB (${key})`);
-                    return value;
-                }
-            }
+            if (!db) await initDB();
+            idbVal = await getIndexedDB(key);
         } catch (error) {
             console.warn(`Не удалось загрузить из IndexedDB (${key}):`, error);
         }
 
-        console.log(`⚠️ Данные не найдены: ${key}`);
-        return undefined;
+        let value;
+        if (key === "cycleMarks") {
+            value = mergeMarks(localVal, idbVal);
+        } else if (key === "cycleHistory") {
+            value = pickHistory(localVal, idbVal);
+        } else if (key === "cycleData") {
+            value = pickCycle(localVal, idbVal);
+        } else if (!isBlank(localVal) && !isBlank(idbVal) && typeof localVal === "object") {
+            value = { ...idbVal, ...localVal };
+        } else {
+            value = isBlank(localVal) ? idbVal : localVal;
+        }
+
+        if (value === undefined) {
+            console.log(`⚠️ Данные не найдены: ${key}`);
+            return undefined;
+        }
+
+        console.log(`📦 Данные загружены (${key})`);
+        return value;
     }
 
     /**
@@ -238,7 +309,7 @@ const StorageManager = (() => {
      * Миграция данных из localStorage в IndexedDB
      */
     async function migrateFromLocalStorage() {
-        const keys = ["cycleData", "cycleMarks"];
+        const keys = ["cycleData", "cycleMarks", "cycleHistory", "cyclePrefs"];
 
         for (const key of keys) {
             const item = localStorage.getItem(key);
