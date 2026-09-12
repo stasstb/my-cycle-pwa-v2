@@ -670,6 +670,16 @@ button {
   border-color: #29262b;
 }
 
+.weekdayBtn.tone-rose.active,
+.weekdayBtn.tone-orange.active,
+.weekdayBtn.tone-peach.active,
+.weekdayBtn.tone-gold.active,
+.weekdayBtn.tone-mint.active,
+.weekdayBtn.tone-lilac.active,
+.weekdayBtn.tone-sky.active {
+  color: #29262b;
+}
+
 .weekBlock {
   margin-top: 14px;
 }
