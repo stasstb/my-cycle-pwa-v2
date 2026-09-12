@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.0";
+const APP_VERSION = "2.0.1";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
