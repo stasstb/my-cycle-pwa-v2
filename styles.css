@@ -166,6 +166,41 @@ h1 {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+.headerTopline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.headerIcon,
+.toTopButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e3cfd0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.68);
+  color: #5a3844;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 3px 10px rgba(91, 68, 59, 0.08);
+}
+
+.headerIcon:active,
+.toTopButton:active {
+  transform: translateY(1px);
+}
+
 h2 {
   margin: 0 0 5px;
   font-size: 20px;
@@ -819,6 +854,13 @@ button {
   background: #faf8f9;
 }
 
+.toTopButton {
+  margin-top: 7px;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+}
+
 .installGuide[hidden] {
   display: none;
 }
@@ -941,6 +983,49 @@ button {
   gap: 8px;
   justify-content: center;
   margin-bottom: 4px;
+}
+
+.helpSection {
+  margin-top: 14px;
+  border-top: 1px solid #f0d7c9;
+  padding-top: 11px;
+}
+
+.helpSection summary {
+  cursor: pointer;
+  color: #7b4d39;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.helpContent {
+  margin-top: 11px;
+  color: #77727a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.helpContent h3 {
+  margin: 12px 0 4px;
+  color: #5a3844;
+  font-size: 12px;
+}
+
+.helpContent h3:first-child {
+  margin-top: 0;
+}
+
+.helpContent p {
+  margin: 5px 0;
+}
+
+.helpContent ol {
+  margin: 5px 0 0;
+  padding-left: 19px;
+}
+
+.helpContent li+li {
+  margin-top: 4px;
 }
 
 .backupBtn {

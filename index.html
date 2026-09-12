@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="./icons/icon-192.svg">
   <title>Пробуждение 🧡</title>
 
-  <link rel="stylesheet" href="./styles.css?v=2.0.7">
+  <link rel="stylesheet" href="./styles.css?v=2.0.9">
   <!-- PDF.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
@@ -27,9 +27,17 @@
 
   <header class="app-header">
 
-    <h1>
-      Пробуждение <span class="orange">🧡</span>
-    </h1>
+    <div class="headerTopline">
+      <h1>
+        Пробуждение <span class="orange">🧡</span>
+      </h1>
+      <nav class="headerActions" aria-label="Навигация">
+        <button type="button" class="headerIcon" onclick="goToHelp()" aria-label="Открыть справку"
+          title="Справка">?</button>
+        <button type="button" class="headerIcon" onclick="goToSettings()" aria-label="Открыть настройки"
+          title="Настройки">⚙</button>
+      </nav>
+    </div>
 
     <div class="small">
       Начни День 1 в любой день
@@ -95,7 +103,7 @@
 
   <script src="./diagnostic.js"></script>
   <script src="./storage.js"></script>
-  <script src="./app.js?v=2.0.7" defer></script>
+  <script src="./app.js?v=2.0.9" defer></script>
 
 </body>
 

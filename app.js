@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.7";
+const APP_VERSION = "2.0.9";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
@@ -758,7 +758,7 @@ function renderSettingsCard() {
   if (!settings) return;
 
   settings.innerHTML = `
-    <section class="card settingsCard">
+    <section id="settingsBlock" class="card settingsCard">
       <div class="settingsHeader"><span class="settingsIcon">⚙️</span> Настройки</div>
       <div class="settingsText">
         ⚠️ Очистка истории браузера может удалить данные приложения. Сохраняйте резервную копию.
@@ -767,6 +767,26 @@ function renderSettingsCard() {
         <button type="button" class="backupBtn" onclick="exportAppData()">Экспорт</button>
         <button type="button" class="backupBtn secondary" onclick="triggerImportAppData()">Импорт</button>
       </div>
+      <details id="helpBlock" class="helpSection">
+        <summary>Справка</summary>
+        <div class="helpContent">
+          <h3>Установка</h3>
+          <p><strong>iPhone:</strong> открой сайт в Safari, нажми «Поделиться» и выбери «На экран “Домой”».</p>
+          <p><strong>Android:</strong> открой сайт в Chrome, нажми меню ⋮ и выбери «Установить приложение» или «Добавить на главный экран».</p>
+
+          <h3>Как пользоваться</h3>
+          <ol>
+            <li>Выбери программу и нажми «Начать цикл».</li>
+            <li>Открой текущий день в календаре и пройди шаги практики.</li>
+            <li>Отметь выполненные шаги или нажми «Завершить день».</li>
+            <li>После завершения добавь заметку о самочувствии и результате.</li>
+            <li>Во время менструации используй паузу. Для регулярных практик выбери раздел «Поддержание».</li>
+          </ol>
+
+          <h3>Данные</h3>
+          <p>История хранится на этом устройстве. Перед очисткой данных браузера сделай экспорт в JSON, а затем восстанови его через «Импорт».</p>
+        </div>
+      </details>
     </section>
   `;
 }
@@ -1463,7 +1483,26 @@ function renderFooter() {
     <div class="dataNote">
       История хранится на этом устройстве. Для резервной копии используй «Экспорт» в настройках.
     </div>
+    <button type="button" class="toTopButton" onclick="scrollToTop()" aria-label="Вернуться наверх" title="Наверх">↑</button>
   `;
+}
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function goToHelp() {
+  const help = document.getElementById("helpBlock");
+  if (help) help.open = true;
+  scrollToSection("helpBlock");
+}
+
+function goToSettings() {
+  scrollToSection("settingsBlock");
+}
+
+function scrollToTop() {
+  document.getElementById("mainContent")?.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /* =========================
