@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.18";
+const APP_VERSION = "2.0.19";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
@@ -10,7 +10,7 @@ function registerPWA() {
   const register = async () => {
     try {
       const registration = await navigator.serviceWorker.register(
-        `./sw.js?v=${encodeURIComponent(APP_VERSION)}`,
+        `./sw.js?v=${encodeURIComponent(APP_VERSION)}&t=${Date.now()}`,
         { updateViaCache: "none" }
       );
 
