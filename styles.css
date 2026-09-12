@@ -375,42 +375,49 @@ button {
   transform: scale(0.98);
 }
 
+.weekdayBtn.tone-rose,
 .weekdayBtn.tone-rose.active,
 .day.practice.tone-rose {
   background: linear-gradient(180deg, #ffeaf2, #ffdfe9);
   border-color: #efbfd0;
 }
 
+.weekdayBtn.tone-orange,
 .weekdayBtn.tone-orange.active,
 .day.practice.tone-orange {
   background: linear-gradient(180deg, #fff0dd, #fde7c3);
   border-color: #f0c58d;
 }
 
+.weekdayBtn.tone-peach,
 .weekdayBtn.tone-peach.active,
 .day.practice.tone-peach {
   background: linear-gradient(180deg, #fff6e9, #fcedd9);
   border-color: #efc79d;
 }
 
+.weekdayBtn.tone-gold,
 .weekdayBtn.tone-gold.active,
 .day.practice.tone-gold {
   background: linear-gradient(180deg, #fffbdc, #f9ebad);
   border-color: #e7d285;
 }
 
+.weekdayBtn.tone-mint,
 .weekdayBtn.tone-mint.active,
 .day.practice.tone-mint {
   background: linear-gradient(180deg, #edfaf1, #dff6e7);
   border-color: #bfe1c7;
 }
 
+.weekdayBtn.tone-lilac,
 .weekdayBtn.tone-lilac.active,
 .day.practice.tone-lilac {
   background: linear-gradient(180deg, #f6efff, #eae0ff);
   border-color: #d3c1ef;
 }
 
+.weekdayBtn.tone-sky,
 .weekdayBtn.tone-sky.active,
 .day.practice.tone-sky {
   background: linear-gradient(180deg, #edf9ff, #dfeffc);
