@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "1.2.0";
+const APP_VERSION = "2.0.0";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
@@ -86,6 +86,12 @@ const NOTE_EXAMPLES = [
   "Было сложно сосредоточиться",
   "Хорошо расслабилась, чувствительность выше",
   "Сегодня ничего особенного"
+];
+
+const COURSE_OUTCOMES = [
+  "Стала чаще оргазмировать",
+  "Повысилась чувствительность зон К, G",
+  "Научилась быстро расслабляться и переключаться на ощущения в себе"
 ];
 
 function toISODate(date) {
@@ -343,8 +349,27 @@ function emptyCycle() {
     pausedDays: 0,
     programId: activeProgram,
     maintenanceWeekdays: weekdays,
+    programStarts: {
+      [activeProgram]: todayISO()
+    },
     updatedAt: Date.now()
   };
+}
+
+function programStartDate(id) {
+  if (!cycle) return todayISO();
+
+  const programStarts = cycle.programStarts || {};
+  if (!programStarts[id]) {
+    programStarts[id] = todayISO();
+    cycle.programStarts = programStarts;
+  }
+
+  return programStarts[id];
+}
+
+function programCurrentDay(id) {
+  return Math.max(1, diffDaysISO(programStartDate(id), todayISO()) + 1);
 }
 
 function countCompleted(sourceMarks, programId) {
@@ -425,9 +450,9 @@ function currentDay() {
   return Math.max(1, days);
 }
 
-function programSlotDate(index) {
+function programSlotDate(id, index) {
   if (!cycle) return null;
-  return addDaysISO(cycle.start, index + (cycle.pausedDays || 0));
+  return addDaysISO(programStartDate(id), index);
 }
 
 function markKeyForProgram(id, index) {
@@ -483,6 +508,10 @@ function getReminder(id, index) {
     return ["За 15 минут", "Крем с L-Arginin"];
   }
 
+  if (id === "combo" && index % 2 === 1) {
+    return ["За 15 минут", "Крем с L-Arginin"];
+  }
+
   if (id === "g" && (index === 1 || index === 3)) {
     return ["За 20 минут", "Крем G-Spot"];
   }
@@ -492,7 +521,7 @@ function getReminder(id, index) {
   }
 
   if (id === "maintenance") {
-    return ["Поддержание", "Короткая практика 1–2 раза в неделю"];
+    return ["Поддержание", "Короткая практика 1–2 раза в неделю. Дыхание + 12 минут самомассажа"];
   }
 
   return null;
@@ -664,12 +693,16 @@ function renderHero() {
     return;
   }
 
+  const programTitle = programById(activeProgram)?.title || "Программа";
+  const startDate = formatDate(programStartDate(activeProgram));
+  const zoneDay = programCurrentDay(activeProgram);
+
   hero.innerHTML = `
     <section class="card">
       <div class="small">СЕГОДНЯ • ${formatDateFullFriendly(todayISO())}</div>
-      <h2>День ${currentDay()}</h2>
+      <h2>${programTitle}</h2>
       <p class="description">
-        Старт цикла: ${formatDate(cycle.start)}
+        Дата старта: ${startDate} • День ${zoneDay} в зоне
       </p>
       <button class="pause" onclick="togglePause()">
         Началась менструация • Поставить на паузу
@@ -682,6 +715,24 @@ function renderHero() {
       <button class="pdf" onclick="openPDF()">
         Массаж + дыхание • PDF
       </button>
+    </section>
+  `;
+}
+
+function renderSettingsCard() {
+  const settings = document.getElementById("settings");
+  if (!settings) return;
+
+  settings.innerHTML = `
+    <section class="card settingsCard">
+      <div class="settingsHeader"><span class="settingsIcon">⚙️</span> Настройки</div>
+      <div class="settingsText">
+        ⚠️ Очистка истории браузера может удалить данные приложения. Сохраняйте резервную копию.
+      </div>
+      <div class="dataActions">
+        <button type="button" class="backupBtn" onclick="exportAppData()">Экспорт</button>
+        <button type="button" class="backupBtn secondary" onclick="triggerImportAppData()">Импорт</button>
+      </div>
     </section>
   `;
 }
@@ -724,6 +775,21 @@ function renderNoteBlock(key, completed) {
     </button>
   `).join("");
 
+  const selectedOutcomes = Array.isArray(marks[`${key}_outcomes`]) ? marks[`${key}_outcomes`] : [];
+
+  const outcomeButtons = COURSE_OUTCOMES.map((text, index) => {
+    const id = `outcome_${index}`;
+    const active = selectedOutcomes.includes(id) ? "selected" : "";
+    return `
+      <button
+        type="button"
+        class="outcomeChip ${active}"
+        onclick="toggleCourseOutcome('${key}', '${id}')">
+        ${escapeHtml(text)}
+      </button>
+    `;
+  }).join("");
+
   return `
     <div class="practiceNote">
       <label for="practiceNote"><b>Как прошла практика?</b></label>
@@ -734,8 +800,28 @@ function renderNoteBlock(key, completed) {
         placeholder="Напиши несколько слов..."
         oninput="saveNote('${key}')"></textarea>
       <div class="exampleChips">${examples}</div>
+
+      <div class="outcomeBlock">
+        <div class="outcomeTitle">Прогресс курса</div>
+        <div class="outcomeList">${outcomeButtons}</div>
+      </div>
     </div>
   `;
+}
+
+function toggleCourseOutcome(key, outcomeId) {
+  const current = Array.isArray(marks[`${key}_outcomes`]) ? marks[`${key}_outcomes`] : [];
+  const index = current.indexOf(outcomeId);
+
+  if (index >= 0) {
+    current.splice(index, 1);
+  } else {
+    current.push(outcomeId);
+  }
+
+  marks[`${key}_outcomes`] = current;
+  save();
+  render();
 }
 
 function hydrateNoteField(key) {
@@ -779,18 +865,34 @@ function renderDaySteps(key, item, reminder) {
       title: "Дыхание",
       text: "Выполнить дыхательные упражнения по схеме из PDF."
     });
-    steps.push({
-      title: "Лубрикант",
-      text: "Водный лубрикант."
-    });
+
+    if (item[2] === "practice") {
+      steps.push({
+        title: "Лубрикант",
+        text: "Водный лубрикант."
+      });
+      steps.push({
+        title: "Крем",
+        text: "Для мультиоргазма: за 15 минут — клитор L-Arginin, G-Spot; для губ/сосков — Intt Жидкий вибратор."
+      });
+      steps.push({
+        title: "Массаж",
+        text: "Вульва — 3 минуты • Клитор — 3 минуты • Зона G — 3 минуты • Зона К — 3 минуты."
+      });
+    } else {
+      steps.push({
+        title: "Лубрикант",
+        text: "Водный лубрикант."
+      });
+    }
   }
 
-  if (item[2] !== "rest") {
+  if (item[2] !== "rest" && item[2] !== "practice") {
     steps.push({
       title: item[2] === "breath" ? "Дыхание" : "Массаж",
       text: item[1] ? `${item[0]} · ${item[1]}` : item[0]
     });
-  } else {
+  } else if (item[2] === "rest") {
     steps.push({
       title: "Отдых",
       text: "Сегодня без массажа. Можно отметить день и оставить заметку."
@@ -821,7 +923,7 @@ function renderDaySteps(key, item, reminder) {
 
 function renderCalendar() {
   const program = programById(activeProgram);
-  const todayIndex = cycle ? currentDay() - 1 : -1;
+  const todayIndex = cycle ? programCurrentDay(program.id) - 1 : -1;
 
   let html = `
     <section class="card">
@@ -841,8 +943,8 @@ function renderCalendar() {
   program.days.forEach((item, index) => {
     const key = markKeyForProgram(program.id, index);
     const completed = isCompleted(key);
-    const dateISO = programSlotDate(index);
-    const isToday = Boolean(cycle) && !cycle.paused && index === todayIndex;
+    const dateISO = programSlotDate(program.id, index);
+    const isToday = Boolean(cycle) && !cycle.paused && program.id === activeProgram && index === todayIndex;
     const note = getNote(key);
 
     html += `
@@ -913,10 +1015,20 @@ function renderMaintenanceCalendar() {
   const firstMonday = mondayOf(startISO);
   const today = todayISO();
 
+  const toneByDay = [
+    "tone-rose",
+    "tone-orange",
+    "tone-peach",
+    "tone-gold",
+    "tone-mint",
+    "tone-lilac",
+    "tone-sky"
+  ];
+
   const weekdayButtons = WEEKDAY_SHORT.map(day => `
     <button
       type="button"
-      class="weekdayBtn ${selected.includes(day.id) ? "active" : ""}"
+      class="weekdayBtn ${selected.includes(day.id) ? "active" : ""} ${toneByDay[day.id] || "tone-peach"}"
       onclick="toggleMaintenanceWeekday(${day.id})">
       ${day.label}
     </button>
@@ -942,10 +1054,11 @@ function renderMaintenanceCalendar() {
         const isToday = dateISO === today && !cycle.paused;
         const note = getNote(key);
         const weekdayLabel = WEEKDAY_SHORT.find(item => item.id === jsDay)?.label || "";
+        const toneClass = toneByDay[jsDay] || "tone-peach";
 
         return `
           <button
-            class="day practice ${completed ? "completed" : ""} ${isToday ? "today" : ""}"
+            class="day practice ${completed ? "completed" : ""} ${isToday ? "today" : ""} ${toneClass}"
             onclick="openMaintenanceDay('${dateISO}')">
             <strong>${weekdayLabel}</strong>
             <div class="dayDate">${formatDate(dateISO)}</div>
@@ -971,7 +1084,7 @@ function renderMaintenanceCalendar() {
     : "";
 
   document.getElementById("content").innerHTML = `
-    <section class="card">
+    <section class="card maintenance-card">
       <h2>${program.title}</h2>
       <div class="description">${program.description}</div>
       <div class="weekdayRow">${weekdayButtons}</div>
@@ -1021,7 +1134,7 @@ function renderProgramDay(id, index) {
   const program = programById(id);
   const item = program.days[index];
   const key = markKeyForProgram(id, index);
-  const dateISO = programSlotDate(index);
+  const dateISO = programSlotDate(id, index);
   const reminder = getReminder(id, index);
   const { steps, html: stepsHtml } = renderDaySteps(key, item, reminder);
   const completed = isCompleted(key);
@@ -1088,6 +1201,7 @@ function toggleStep(key, index, value) {
 function finishDay(key, count) {
   marks[`${key}_steps`] = Array(count).fill(true);
   marks[key] = true;
+  openDayState = null;
   persistUserData();
   render();
 }
@@ -1101,6 +1215,12 @@ function selectProgram(id) {
   openDayState = null;
   if (cycle) {
     cycle.programId = id;
+    if (!cycle.programStarts) {
+      cycle.programStarts = {};
+    }
+    if (!cycle.programStarts[id]) {
+      cycle.programStarts[id] = todayISO();
+    }
     persistUserData();
   }
   render();
@@ -1195,19 +1315,101 @@ function updateProgress() {
   }
 
   const percent = total ? Math.round(done / total * 100) : 0;
+  const zoneLabel = activeProgram === "maintenance" ? "Прогресс поддержания" : "Прогресс зоны";
 
   document.getElementById("progressFill").style.width = percent + "%";
   document.getElementById("progressText").textContent = cycle
-    ? `${done} из ${total} отмечено · ${percent}%`
+    ? `${zoneLabel}: ${done} из ${total} • ${percent}%`
     : "Цикл еще не начат";
+}
+
+function exportAppData() {
+  const payload = {
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    cycle: cycle ? JSON.parse(JSON.stringify(cycle)) : null,
+    marks: JSON.parse(JSON.stringify(marks || {})),
+    cycleHistory: JSON.parse(JSON.stringify(cycleHistory || [])),
+    activeProgram,
+    maintenanceWeeksShown
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `probuzhdenie-backup-${todayISO()}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function triggerImportAppData() {
+  const input = document.getElementById("backupImportInput");
+  if (!input) {
+    alert("Поле импорта данных недоступно.");
+    return;
+  }
+  input.value = "";
+  input.click();
+}
+
+async function importAppDataFromFile(file) {
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("Некорректный формат файла");
+    }
+
+    cycle = parsed.cycle || null;
+    marks = parsed.marks || {};
+    cycleHistory = Array.isArray(parsed.cycleHistory) ? parsed.cycleHistory : [];
+    activeProgram = parsed.activeProgram || activeProgram;
+
+    if (parsed.maintenanceWeeksShown && typeof parsed.maintenanceWeeksShown === "number") {
+      maintenanceWeeksShown = Math.min(parsed.maintenanceWeeksShown, MAINTENANCE_WEEKS_MAX);
+    }
+
+    if (cycle && !cycle.programStarts) {
+      cycle.programStarts = {};
+    }
+
+    await persistUserData();
+    render();
+    alert("Данные успешно импортированы.");
+  } catch (error) {
+    console.error("Ошибка импорта данных:", error);
+    alert("Не удалось импортировать файл. Проверьте формат JSON.");
+  }
+}
+
+function bindBackupImportHandler() {
+  const input = document.getElementById("backupImportInput");
+  if (!input) return;
+
+  input.onchange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      importAppDataFromFile(file);
+    }
+  };
 }
 
 function renderFooter() {
   const footer = document.getElementById("footer");
   if (!footer) return;
   footer.innerHTML = `
-    Данные хранятся только на этом устройстве.
-    На iPhone добавь приложение на экран «Домой» в Safari — так браузер реже стирает записи.
+    <div class="dataNote">
+      Данные хранятся в браузере. На iPhone добавь приложение на экран «Домой» в Safari — так браузер реже стирает записи.
+    </div>
   `;
 }
 
@@ -1216,7 +1418,9 @@ function renderFooter() {
 ========================= */
 
 function render() {
+  bindBackupImportHandler();
   renderHero();
+  renderSettingsCard();
   renderTabs();
 
   if (!renderOpenDay()) {

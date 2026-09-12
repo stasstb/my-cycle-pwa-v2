@@ -359,6 +359,76 @@ button {
   background: #fff5e3;
 }
 
+.maintenance-card {
+  background: linear-gradient(180deg, rgba(255, 242, 246, 0.96), rgba(255, 247, 239, 0.96), rgba(255, 252, 244, 0.96));
+  border-color: #f4d7de;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.weekdayBtn {
+  box-shadow: 0 2px 8px rgba(91, 68, 59, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.weekdayBtn:active,
+.moreWeeks:active {
+  transform: scale(0.98);
+}
+
+.weekdayBtn.tone-rose.active,
+.day.practice.tone-rose {
+  background: linear-gradient(180deg, #ffeaf2, #ffdfe9);
+  border-color: #efbfd0;
+}
+
+.weekdayBtn.tone-orange.active,
+.day.practice.tone-orange {
+  background: linear-gradient(180deg, #fff0dd, #fde7c3);
+  border-color: #f0c58d;
+}
+
+.weekdayBtn.tone-peach.active,
+.day.practice.tone-peach {
+  background: linear-gradient(180deg, #fff6e9, #fcedd9);
+  border-color: #efc79d;
+}
+
+.weekdayBtn.tone-gold.active,
+.day.practice.tone-gold {
+  background: linear-gradient(180deg, #fffbdc, #f9ebad);
+  border-color: #e7d285;
+}
+
+.weekdayBtn.tone-mint.active,
+.day.practice.tone-mint {
+  background: linear-gradient(180deg, #edfaf1, #dff6e7);
+  border-color: #bfe1c7;
+}
+
+.weekdayBtn.tone-lilac.active,
+.day.practice.tone-lilac {
+  background: linear-gradient(180deg, #f6efff, #eae0ff);
+  border-color: #d3c1ef;
+}
+
+.weekdayBtn.tone-sky.active,
+.day.practice.tone-sky {
+  background: linear-gradient(180deg, #edf9ff, #dfeffc);
+  border-color: #bfdff4;
+}
+
+.weekLabel {
+  color: #7c5964;
+  letter-spacing: 0.02em;
+}
+
+.moreWeeks {
+  background: linear-gradient(180deg, #fffaf9, #fff2f5);
+  border-color: #f1d2d9;
+  color: #5a3844;
+  box-shadow: 0 4px 12px rgba(168, 89, 108, 0.08);
+}
+
 .dayName {
   margin-top: 7px;
   font-weight: 800;
@@ -518,6 +588,44 @@ button {
   margin-top: 8px;
 }
 
+.outcomeBlock {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e8ddbf;
+}
+
+.outcomeTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5a4d1a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.outcomeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.outcomeChip {
+  border: 1px solid #e1dde2;
+  background: white;
+  color: #29262b;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.outcomeChip.selected {
+  background: #29262b;
+  color: white;
+  border-color: #29262b;
+}
+
 .exampleChip {
   border: 1px solid #efdfaf;
   background: white;
@@ -633,6 +741,67 @@ button {
   padding-bottom: calc(8px + env(safe-area-inset-bottom));
   flex-shrink: 0;
   background: #faf8f9;
+}
+
+.settingsCard {
+  background: linear-gradient(180deg, rgba(255, 245, 238, 0.9), rgba(255, 250, 247, 0.96));
+  border-color: #f0d7c9;
+}
+
+.settingsHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7b4d39;
+  margin-bottom: 8px;
+}
+
+.settingsIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+}
+
+.settingsText {
+  color: #9a4d3d;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.dataActions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.backupBtn {
+  border: 1px solid #e1dde2;
+  background: #fff;
+  color: #29262b;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.backupBtn.secondary {
+  background: #fff5ef;
+  border-color: #f2d1c5;
+}
+
+.dataNote {
+  line-height: 1.45;
 }
 
 /* =========================

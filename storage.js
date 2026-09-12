@@ -11,7 +11,7 @@
 const StorageManager = (() => {
     const DB_NAME = "miy-cykl-db";
     const STORE_NAME = "appData";
-    const VERSION = 1;
+    const VERSION = 2;
 
     let db = null;
     let isPersistent = false;

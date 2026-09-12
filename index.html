@@ -8,14 +8,14 @@
   <meta name="theme-color" content="#faf8f9">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Мой цикл">
+  <meta name="apple-mobile-web-app-title" content="Пробуждение">
 
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon-192.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-192.svg">
-  <title>Мой цикл 🧡</title>
+  <title>Пробуждение 🧡</title>
 
-  <link rel="stylesheet" href="./styles.css?v=1.2.0">
+  <link rel="stylesheet" href="./styles.css?v=2.0.0">
   <!-- PDF.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
@@ -28,7 +28,7 @@
   <header>
 
     <h1>
-      Мой цикл <span class="orange">🧡</span>
+      Пробуждение <span class="orange">🧡</span>
     </h1>
 
     <div class="small">
@@ -53,6 +53,7 @@
   <main id="mainContent">
 
     <div id="hero"></div>
+    <div id="settings"></div>
 
     <div class="tabs" id="tabs"></div>
 
@@ -71,11 +72,11 @@
   </div>
 
   <div class="footer" id="footer"></div>
-
+  <input id="backupImportInput" type="file" accept="application/json" hidden>
 
   <script src="./diagnostic.js"></script>
   <script src="./storage.js"></script>
-  <script src="./app.js?v=1.2.0" defer></script>
+  <script src="./app.js?v=2.0.0" defer></script>
 
 </body>
 
