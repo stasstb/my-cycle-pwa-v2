@@ -50,7 +50,7 @@ function registerPWA() {
    PDF
 ========================= */
 
-const PDF_URL = "./Календарь пробуждения зон.pdf";
+const PDF_URL = "./probuzhdenie-zones-guide.pdf";
 
 let pdfDoc = null;
 let currentPage = 1;
