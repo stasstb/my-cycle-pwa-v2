@@ -666,7 +666,7 @@ button {
 
 .weekdayBtn.active {
   background: #29262b;
-  color: white;
+  color: #29262b;
   border-color: #29262b;
 }
 
