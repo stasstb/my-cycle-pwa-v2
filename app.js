@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.6";
+const APP_VERSION = "2.0.7";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
@@ -269,6 +269,40 @@ let isPDFOpen = false;
 let openDayState = null;
 let maintenanceWeeksShown = 16;
 const MAINTENANCE_WEEKS_MAX = 104;
+const INSTALL_GUIDE_KEY = "probuzhdenie-install-guide-shown";
+
+function isInstalledPWA() {
+  return window.matchMedia?.("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+}
+
+function showInstallGuideOnce() {
+  if (isInstalledPWA()) return;
+
+  let hasSeenGuide = false;
+  try {
+    hasSeenGuide = localStorage.getItem(INSTALL_GUIDE_KEY) === "true";
+  } catch (error) {
+    console.warn("Не удалось проверить показ инструкции установки:", error);
+  }
+
+  if (hasSeenGuide) return;
+
+  const guide = document.getElementById("installGuide");
+  if (!guide) return;
+
+  guide.hidden = false;
+  try {
+    localStorage.setItem(INSTALL_GUIDE_KEY, "true");
+  } catch (error) {
+    console.warn("Не удалось сохранить статус инструкции установки:", error);
+  }
+}
+
+function closeInstallGuide() {
+  const guide = document.getElementById("installGuide");
+  if (guide) guide.hidden = true;
+}
 
 async function loadAppData() {
   try {
@@ -1648,6 +1682,7 @@ async function initializeApp() {
 
   await loadAppData();
   render();
+  showInstallGuideOnce();
   bindPersistenceEvents();
 
   await requestNotificationPermission();

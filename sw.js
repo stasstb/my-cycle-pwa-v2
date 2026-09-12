@@ -1,12 +1,12 @@
-const APP_VERSION = "2.0.6";
+const APP_VERSION = "2.0.7";
 const CACHE_NAME = `miy-cykl-${APP_VERSION}`;
 
 const PRECACHE = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./styles.css?v=2.0.6",
-  "./app.js?v=2.0.6",
+  "./styles.css?v=2.0.7",
+  "./app.js?v=2.0.7",
   "./storage.js",
   "./diagnostic.js",
   "./probuzhdenie-zones-guide.pdf",
