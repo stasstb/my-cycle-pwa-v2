@@ -2,7 +2,51 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.20";
+const APP_VERSION = "2.0.22";
+
+function showAppDialog(message, options = {}) {
+  const dialog = document.getElementById("appDialog");
+  const title = document.getElementById("appDialogTitle");
+  const text = document.getElementById("appDialogMessage");
+  const confirmButton = document.getElementById("appDialogConfirm");
+  const cancelButton = document.getElementById("appDialogCancel");
+
+  if (!dialog || !title || !text || !confirmButton || !cancelButton) {
+    return options.confirm
+      ? Promise.resolve(window.confirm(message))
+      : (window.alert(message), Promise.resolve());
+  }
+
+  title.textContent = options.title || "Сообщение";
+  text.textContent = message;
+  confirmButton.textContent = options.confirmLabel || "Понятно";
+  cancelButton.hidden = !options.confirm;
+  dialog.hidden = false;
+
+  return new Promise(resolve => {
+    const finish = result => {
+      dialog.hidden = true;
+      confirmButton.onclick = null;
+      cancelButton.onclick = null;
+      resolve(result);
+    };
+
+    confirmButton.onclick = () => finish(true);
+    cancelButton.onclick = () => finish(false);
+  });
+}
+
+function appAlert(message, title = "Пробуждение") {
+  return showAppDialog(message, { title });
+}
+
+function appConfirm(message, title = "Подтверждение") {
+  return showAppDialog(message, {
+    title,
+    confirm: true,
+    confirmLabel: "Продолжить"
+  });
+}
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
@@ -282,6 +326,60 @@ function isInstalledPWA() {
     window.navigator.standalone === true;
 }
 
+function getInstallPlatform() {
+  const userAgent = navigator.userAgent || "";
+  const isIOS = /iPad|iPhone|iPod/.test(userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (isIOS) return "ios";
+  if (/Android/i.test(userAgent)) return "android";
+  return "other";
+}
+
+function renderInstallGuideContent() {
+  const intro = document.getElementById("installGuideIntro");
+  const steps = document.getElementById("installSteps");
+  if (!intro || !steps) return;
+
+  const platform = getInstallPlatform();
+  if (platform === "ios") {
+    intro.textContent = "Для iPhone и iPad установи приложение через Safari. Это справочная информация, текст не является ссылкой.";
+    steps.innerHTML = `
+      <section class="installStep">
+        <strong>iPhone / iPad</strong>
+        <span>1. Открой сайт в Safari.</span>
+        <span>2. Нажми кнопку «Поделиться».</span>
+        <span>3. Выбери «На экран “Домой”» и подтверди добавление.</span>
+      </section>
+    `;
+    return;
+  }
+
+  if (platform === "android") {
+    intro.textContent = "Для Android установи приложение через Chrome. Это справочная информация, текст не является ссылкой.";
+    steps.innerHTML = `
+      <section class="installStep">
+        <strong>Android</strong>
+        <span>1. Открой сайт в Chrome.</span>
+        <span>2. Нажми меню ⋮.</span>
+        <span>3. Выбери «Установить приложение» или «Добавить на главный экран».</span>
+      </section>
+    `;
+    return;
+  }
+
+  intro.textContent = "Выбери инструкцию для устройства, на котором будешь устанавливать приложение.";
+  steps.innerHTML = `
+    <section class="installStep">
+      <strong>iPhone / iPad</strong>
+      <span>Safari → «Поделиться» → «На экран “Домой”».</span>
+    </section>
+    <section class="installStep">
+      <strong>Android</strong>
+      <span>Chrome → меню ⋮ → «Установить приложение» или «Добавить на главный экран».</span>
+    </section>
+  `;
+}
+
 function showInstallGuideOnce() {
   if (isInstalledPWA()) return;
 
@@ -297,6 +395,7 @@ function showInstallGuideOnce() {
   const guide = document.getElementById("installGuide");
   if (!guide) return;
 
+  renderInstallGuideContent();
   guide.hidden = false;
   try {
     localStorage.setItem(INSTALL_GUIDE_KEY, "true");
@@ -449,13 +548,13 @@ function startCycle() {
   render();
 }
 
-function startNewCycle() {
+async function startNewCycle() {
   if (!cycle) {
     startCycle();
     return;
   }
 
-  const ok = window.confirm(
+  const ok = await appConfirm(
     "Начать новый цикл? Текущий цикл сохранится в истории."
   );
   if (!ok) return;
@@ -612,7 +711,7 @@ async function openPDF() {
         errorMsg += "\n\nFail - PDF файл не найден.";
       }
 
-      alert(errorMsg + "\n\nДеталь: " + error.message);
+      appAlert(errorMsg + "\n\nДеталь: " + error.message, "Ошибка PDF");
     }
   } else {
     await renderPage(currentPage);
@@ -669,7 +768,7 @@ async function renderPage(pageNum) {
     console.log(`✅ Страница ${pageNum} загружена успешно`);
   } catch (error) {
     console.error("❌ Ошибка при рендеринге страницы:", error);
-    alert("Ошибка при отображении страницы: " + error.message);
+    appAlert("Ошибка при отображении страницы: " + error.message, "Ошибка PDF");
   }
 }
 
@@ -1125,7 +1224,7 @@ function maintenanceWeekdays() {
 
 function toggleMaintenanceWeekday(id) {
   if (!cycle) {
-    alert("Сначала начни цикл — тогда можно выбрать дни практики.");
+    appAlert("Сначала начни цикл — тогда можно выбрать дни практики.");
     return;
   }
 
@@ -1135,7 +1234,7 @@ function toggleMaintenanceWeekday(id) {
   if (position >= 0) {
     selected.splice(position, 1);
   } else if (selected.length >= 2) {
-    alert("Для поддержания выбери 1 или 2 дня в неделю.");
+    appAlert("Для поддержания выбери 1 или 2 дня в неделю.");
     return;
   } else {
     selected.push(id);
@@ -1425,13 +1524,13 @@ function toggleHistoryDetails(index) {
   node.hidden = !node.hidden;
 }
 
-function deleteHistoryItem(index) {
+async function deleteHistoryItem(index) {
   const item = cycleHistory[index];
   if (!item) return;
 
   const program = programById(item.programId);
   const title = program?.title || item.programId || "цикл";
-  const ok = window.confirm(
+  const ok = await appConfirm(
     `Удалить цикл «${title}» из истории? Это действие нельзя отменить.`
   );
   if (!ok) return;
@@ -1516,14 +1615,14 @@ function exportAppData() {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) {
     console.error("Ошибка экспорта данных:", error);
-    alert("Не удалось создать резервную копию данных.");
+    appAlert("Не удалось создать резервную копию данных.", "Ошибка экспорта");
   }
 }
 
 function triggerImportAppData() {
   const input = document.getElementById("backupImportInput");
   if (!input) {
-    alert("Поле импорта данных недоступно.");
+    appAlert("Поле импорта данных недоступно.", "Ошибка импорта");
     return;
   }
   input.value = "";
@@ -1546,7 +1645,7 @@ async function importAppDataFromFile(file) {
       throw new Error("Некорректный формат файла");
     }
 
-    if (!window.confirm("Заменить текущие данные данными из резервной копии?")) {
+    if (!await appConfirm("Заменить текущие данные данными из резервной копии?")) {
       return;
     }
 
@@ -1565,10 +1664,10 @@ async function importAppDataFromFile(file) {
 
     await persistUserData();
     render();
-    alert("Резервная копия успешно импортирована.");
+    appAlert("Резервная копия успешно импортирована.", "Импорт завершён");
   } catch (error) {
     console.error("Ошибка импорта данных:", error);
-    alert("Не удалось импортировать файл. Выберите резервную копию JSON из приложения.");
+    appAlert("Не удалось импортировать файл. Выберите резервную копию JSON из приложения.", "Ошибка импорта");
   }
 }
 

@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="./icons/icon-192.svg">
   <title>Пробуждение 🧡</title>
 
-  <link rel="stylesheet" href="./styles.css?v=2.0.20">
+  <link rel="stylesheet" href="./styles.css?v=2.0.22">
   <!-- PDF.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="small">
-      Начни День 1 в любой день <span class="versionLabel">v2.0.20</span>
+      Начни День 1 в любой день <span class="versionLabel">v2.0.22</span>
     </div>
 
     <div class="progress">
@@ -86,27 +86,29 @@
   <div class="footer" id="footer"></div>
   <div id="installGuide" class="installGuide" hidden>
     <div class="installGuideCard" role="dialog" aria-modal="true" aria-labelledby="installGuideTitle">
-      <div class="installGuideEyebrow">Пробуждение на экране</div>
-      <h2 id="installGuideTitle">Добавь приложение для удобного доступа</h2>
-      <p class="installGuideIntro">Так приложение будет открываться отдельно и работать как привычное приложение.</p>
-      <div class="installSteps">
-        <section class="installStep">
-          <strong>iPhone</strong>
-          <span>Открой в Safari → нажми «Поделиться» → выбери «На экран “Домой”».</span>
-        </section>
-        <section class="installStep">
-          <strong>Android</strong>
-          <span>Открой в Chrome → меню ⋮ → выбери «Установить приложение» или «Добавить на главный экран».</span>
-        </section>
-      </div>
+      <div class="installGuideEyebrow"><span class="infoIcon">ⓘ</span> Справочная информация</div>
+      <h2 id="installGuideTitle">Установка приложения</h2>
+      <p id="installGuideIntro" class="installGuideIntro"></p>
+      <div id="installSteps" class="installSteps"></div>
       <button type="button" class="installGuideClose" onclick="closeInstallGuide()">Понятно</button>
+    </div>
+  </div>
+  <div id="appDialog" class="appDialog" hidden>
+    <div class="appDialogCard" role="dialog" aria-modal="true" aria-labelledby="appDialogTitle">
+      <div class="appDialogBrand">Пробуждение <span class="orange">🧡</span></div>
+      <h2 id="appDialogTitle">Сообщение</h2>
+      <p id="appDialogMessage"></p>
+      <div class="appDialogActions">
+        <button type="button" id="appDialogCancel" class="appDialogCancel">Отмена</button>
+        <button type="button" id="appDialogConfirm" class="appDialogConfirm">Понятно</button>
+      </div>
     </div>
   </div>
   <input id="backupImportInput" type="file" accept="application/json" hidden>
 
   <script src="./diagnostic.js"></script>
   <script src="./storage.js"></script>
-  <script src="./app.js?v=2.0.20" defer></script>
+  <script src="./app.js?v=2.0.22" defer></script>
 
 </body>
 
