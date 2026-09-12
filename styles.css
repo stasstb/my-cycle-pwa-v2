@@ -714,12 +714,34 @@ button {
   padding: 4px;
 }
 
+.historyRow {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+}
+
 .historyToggle {
+  flex: 1;
   width: 100%;
   border: 0;
   background: transparent;
   text-align: left;
   padding: 10px 11px;
+}
+
+.historyDelete {
+  flex: 0 0 38px;
+  border: 0;
+  border-radius: 10px;
+  background: #fff1f1;
+  color: #a33b3b;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.historyDelete:active {
+  background: #fbdcdc;
 }
 
 .historyToggle strong {

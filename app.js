@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.2";
+const APP_VERSION = "2.0.3";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
@@ -1243,10 +1243,13 @@ function renderHistoryHtml() {
 
     return `
       <div class="historyItem">
-        <button type="button" class="historyToggle" onclick="toggleHistoryDetails(${index})">
-          <strong>${escapeHtml(title)}</strong>
-          <span>${formatDateRange(item.start, item.end)} · ${item.completed || 0} отметок</span>
-        </button>
+        <div class="historyRow">
+          <button type="button" class="historyToggle" onclick="toggleHistoryDetails(${index})">
+            <strong>${escapeHtml(title)}</strong>
+            <span>${formatDateRange(item.start, item.end)} · ${item.completed || 0} отметок</span>
+          </button>
+          <button type="button" class="historyDelete" onclick="deleteHistoryItem(${index})" aria-label="Удалить цикл" title="Удалить цикл">×</button>
+        </div>
         <div class="historyDetails" id="historyDetails-${index}" hidden>
           ${notesHtml || "<div class=\"description\">Заметок не было</div>"}
         </div>
@@ -1274,6 +1277,22 @@ function toggleHistoryDetails(index) {
   const node = document.getElementById(`historyDetails-${index}`);
   if (!node) return;
   node.hidden = !node.hidden;
+}
+
+function deleteHistoryItem(index) {
+  const item = cycleHistory[index];
+  if (!item) return;
+
+  const program = programById(item.programId);
+  const title = program?.title || item.programId || "цикл";
+  const ok = window.confirm(
+    `Удалить цикл «${title}» из истории? Это действие нельзя отменить.`
+  );
+  if (!ok) return;
+
+  cycleHistory.splice(index, 1);
+  persistUserData();
+  render();
 }
 
 /* =========================
