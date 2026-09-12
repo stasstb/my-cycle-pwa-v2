@@ -31,9 +31,9 @@ header {
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 88% -35%, rgba(255, 179, 118, 0.32), transparent 42%),
-    linear-gradient(135deg, rgba(255, 250, 247, 0.98), rgba(250, 248, 249, 0.96) 58%, rgba(246, 240, 243, 0.96));
-  border-bottom-color: #ead8d8;
+    radial-gradient(circle at 88% -35%, rgba(255, 166, 106, 0.28), transparent 42%),
+    linear-gradient(135deg, rgba(247, 239, 237, 0.98), rgba(244, 240, 243, 0.98) 58%, rgba(237, 229, 235, 0.98));
+  border-bottom-color: #ddc9d0;
   box-shadow: 0 8px 24px rgba(91, 68, 59, 0.08);
 }
 
@@ -1069,6 +1069,12 @@ button {
 
 .helpContent h3:first-child {
   margin-top: 0;
+}
+
+.helpContent h4 {
+  margin: 12px 0 4px;
+  color: #5a3844;
+  font-size: 12px;
 }
 
 .helpContent p {
