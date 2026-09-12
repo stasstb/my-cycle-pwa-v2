@@ -215,6 +215,13 @@ h2 {
   color: #77727a;
 }
 
+.versionLabel {
+  margin-left: 5px;
+  color: #aa8d91;
+  font-size: 10px;
+  font-weight: 700;
+}
+
 .app-header>.small:first-of-type {
   margin-top: 3px;
   color: #8d6d72;

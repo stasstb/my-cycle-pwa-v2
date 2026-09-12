@@ -2,12 +2,12 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.9";
+const APP_VERSION = "2.0.10";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
 
-  window.addEventListener("load", async () => {
+  const register = async () => {
     try {
       const registration = await navigator.serviceWorker.register(
         `./sw.js?v=${encodeURIComponent(APP_VERSION)}`,
@@ -43,7 +43,13 @@ function registerPWA() {
     } catch (error) {
       console.warn("PWA registration failed:", error);
     }
-  });
+  };
+
+  if (document.readyState === "complete") {
+    register();
+  } else {
+    window.addEventListener("load", register, { once: true });
+  }
 }
 
 /* =========================
@@ -1715,6 +1721,8 @@ function bindPersistenceEvents() {
 }
 
 async function initializeApp() {
+  registerPWA();
+
   if (window.StorageManager) {
     await StorageManager.initialize();
   }
@@ -1727,7 +1735,6 @@ async function initializeApp() {
   await requestNotificationPermission();
   initializeReminders();
   await notifyStorageStatus();
-  registerPWA();
 
   if (window.StorageManager) {
     await persistUserData();
