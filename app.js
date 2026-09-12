@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.24";
+const APP_VERSION = "2.0.25";
 
 function showAppDialog(message, options = {}) {
   const dialog = document.getElementById("appDialog");
@@ -58,17 +58,12 @@ function registerPWA() {
         { updateViaCache: "none" }
       );
 
-      await registration.update();
-
-      window.addEventListener("pageshow", () => {
-        registration.update().catch(error => {
-          console.warn("PWA update check failed:", error);
-        });
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
       });
-
-      if (registration.waiting) {
-        registration.waiting.postMessage({ type: "SKIP_WAITING" });
-      }
 
       registration.addEventListener("updatefound", () => {
         const worker = registration.installing;
@@ -84,11 +79,21 @@ function registerPWA() {
         });
       });
 
-      let refreshing = false;
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (refreshing) return;
-        refreshing = true;
-        window.location.reload();
+      const activateWaitingWorker = () => {
+        if (registration.waiting) {
+          registration.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+      };
+
+      await registration.update();
+      activateWaitingWorker();
+
+      window.addEventListener("pageshow", () => {
+        registration.update()
+          .then(activateWaitingWorker)
+          .catch(error => {
+            console.warn("PWA update check failed:", error);
+          });
       });
     } catch (error) {
       console.warn("PWA registration failed:", error);
