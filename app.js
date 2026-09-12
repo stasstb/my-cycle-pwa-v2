@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.14";
+const APP_VERSION = "2.0.16";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
@@ -1476,28 +1476,35 @@ function updateProgress() {
 }
 
 function exportAppData() {
-  const payload = {
-    version: 2,
-    exportedAt: new Date().toISOString(),
-    cycle: cycle ? JSON.parse(JSON.stringify(cycle)) : null,
-    marks: JSON.parse(JSON.stringify(marks || {})),
-    cycleHistory: JSON.parse(JSON.stringify(cycleHistory || [])),
-    activeProgram,
-    maintenanceWeeksShown
-  };
+  try {
+    const payload = {
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      cycle: cycle ? JSON.parse(JSON.stringify(cycle)) : null,
+      marks: JSON.parse(JSON.stringify(marks || {})),
+      cycleHistory: JSON.parse(JSON.stringify(cycleHistory || [])),
+      activeProgram,
+      maintenanceWeeksShown
+    };
 
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {
-    type: "application/json"
-  });
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json;charset=utf-8"
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Пробуждение-резервная-копия-${todayISO()}.json`;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `probuzhdenie-backup-${todayISO()}.json`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+    // Safari may cancel a download if the object URL is revoked immediately.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (error) {
+    console.error("Ошибка экспорта данных:", error);
+    alert("Не удалось создать резервную копию данных.");
+  }
 }
 
 function triggerImportAppData() {
@@ -1517,12 +1524,21 @@ async function importAppDataFromFile(file) {
     const text = await file.text();
     const parsed = JSON.parse(text);
 
-    if (!parsed || typeof parsed !== "object") {
+    if (
+      !parsed ||
+      typeof parsed !== "object" ||
+      typeof parsed.version !== "number" ||
+      (!parsed.cycle && !parsed.marks && !parsed.cycleHistory)
+    ) {
       throw new Error("Некорректный формат файла");
     }
 
+    if (!window.confirm("Заменить текущие данные данными из резервной копии?")) {
+      return;
+    }
+
     cycle = parsed.cycle || null;
-    marks = parsed.marks || {};
+    marks = parsed.marks && typeof parsed.marks === "object" ? parsed.marks : {};
     cycleHistory = Array.isArray(parsed.cycleHistory) ? parsed.cycleHistory : [];
     activeProgram = parsed.activeProgram || activeProgram;
 
@@ -1536,10 +1552,10 @@ async function importAppDataFromFile(file) {
 
     await persistUserData();
     render();
-    alert("Данные успешно импортированы.");
+    alert("Резервная копия успешно импортирована.");
   } catch (error) {
     console.error("Ошибка импорта данных:", error);
-    alert("Не удалось импортировать файл. Проверьте формат JSON.");
+    alert("Не удалось импортировать файл. Выберите резервную копию JSON из приложения.");
   }
 }
 
