@@ -403,6 +403,10 @@ button {
   border-color: #e7d285;
 }
 
+.weekdayBtn.tone-gold.active {
+  color: #5a4d1a;
+}
+
 .weekdayBtn.tone-mint,
 .weekdayBtn.tone-mint.active,
 .day.practice.tone-mint {
