@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.19";
+const APP_VERSION = "2.0.20";
 
 function registerPWA() {
   if (!("serviceWorker" in navigator)) return;
@@ -399,13 +399,8 @@ function emptyCycle() {
 function programStartDate(id) {
   if (!cycle) return todayISO();
 
-  const programStarts = cycle.programStarts || {};
-  if (!programStarts[id]) {
-    programStarts[id] = todayISO();
-    cycle.programStarts = programStarts;
-  }
-
-  return programStarts[id];
+  // All zones share one cycle timeline. Switching zones must not reset the date.
+  return cycle.start;
 }
 
 function programCurrentDay(id) {
