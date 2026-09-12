@@ -1,12 +1,12 @@
-const APP_VERSION = "2.0.5";
+const APP_VERSION = "2.0.6";
 const CACHE_NAME = `miy-cykl-${APP_VERSION}`;
 
 const PRECACHE = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./styles.css?v=2.0.5",
-  "./app.js?v=2.0.5",
+  "./styles.css?v=2.0.6",
+  "./app.js?v=2.0.6",
   "./storage.js",
   "./diagnostic.js",
   "./probuzhdenie-zones-guide.pdf",
@@ -79,9 +79,9 @@ self.addEventListener("fetch", event => {
   if (url.origin !== self.location.origin) return;
 
   if (isHTML(event.request)) {
-    // Network-first: deployed HTML always wins when online.
+    // Bypass the browser/HTTP cache so deployed HTML updates reach the PWA.
     event.respondWith(
-      fetch(event.request)
+      fetch(new Request(event.request, { cache: "no-store" }))
         .then(response => {
           const copy = response.clone();
           caches.open(CACHE_NAME).then(cache => {
