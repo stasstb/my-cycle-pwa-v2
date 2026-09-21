@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.26";
+const APP_VERSION = "2.0.28";
 
 function showAppDialog(message, options = {}) {
   const dialog = document.getElementById("appDialog");
@@ -431,6 +431,10 @@ async function loadAppData() {
     marks = cycleMarks || {};
     cycleHistory = Array.isArray(historyData) ? historyData : [];
 
+    if (cycle && !cycle.startedProgramId) {
+      cycle.startedProgramId = cycle.programId || activeProgram;
+    }
+
     if (cycle?.programId) {
       activeProgram = cycle.programId;
     }
@@ -499,6 +503,7 @@ function emptyCycle() {
     pausedDayNumber: null,
     pausedDays: 0,
     programId: activeProgram,
+    startedProgramId: activeProgram,
     maintenanceWeekdays: weekdays,
     programStarts: {
       [activeProgram]: todayISO()
@@ -541,15 +546,20 @@ function countCompleted(sourceMarks, programId) {
 function snapshotCurrentCycle() {
   if (!cycle) return null;
 
+  const today = todayISO();
+  const yesterday = addDaysISO(today, -1);
+  const end = cycle.start && cycle.start < today ? yesterday : today;
+  const programId = cycle.startedProgramId || cycle.programId || activeProgram;
+
   return {
     id: cycle.id || newCycleId(),
     start: cycle.start,
-    end: todayISO(),
-    programId: cycle.programId || activeProgram,
+    end,
+    programId,
     pausedDays: cycle.pausedDays || 0,
     maintenanceWeekdays: (cycle.maintenanceWeekdays || []).slice(),
     marks: JSON.parse(JSON.stringify(marks || {})),
-    completed: countCompleted(marks, cycle.programId || activeProgram)
+    completed: countCompleted(marks, programId)
   };
 }
 
@@ -634,7 +644,7 @@ function togglePause() {
       Number(cycle.pausedDayNumber || currentDay())
     );
 
-    cycle.start = addDaysISO(todayISO(), -(pausedDayNumber - 1));
+    cycle.start = addDaysISO(todayISO(), -pausedDayNumber);
     cycle.pausedDays = 0;
     cycle.paused = false;
     cycle.pauseStart = null;
@@ -943,7 +953,7 @@ function renderSettingsCard() {
             </li>
             <li>
               <strong>Используй паузу при необходимости.</strong>
-              <p>Если началась менструация, нажми «Поставить на паузу». Номер текущего дня зафиксируется, и дни не будут считаться дальше. После окончания нажми «Продолжить цикл», чтобы продолжить с зафиксированного дня.</p>
+              <p>Если началась менструация, нажми «Поставить на паузу». Номер текущего дня зафиксируется, и дни не будут считаться дальше. После окончания нажми «Продолжить цикл», чтобы сегодняшний день стал следующим днём цикла.</p>
             </li>
             <li>
               <strong>Перейди в «Поддержание».</strong>
@@ -964,7 +974,7 @@ function renderSettingsCard() {
       <details class="helpGroup">
         <summary>Пауза и новый цикл</summary>
         <div class="helpContent">
-          <p>Кнопка паузы фиксирует номер текущего дня и останавливает счётчик на время менструации. После окончания нажми «Продолжить цикл», чтобы продолжить с этого дня.</p>
+          <p>Кнопка паузы фиксирует номер текущего дня и останавливает счётчик на время менструации. После окончания нажми «Продолжить цикл», чтобы сегодняшний день стал следующим днём цикла.</p>
           <p>«Новый цикл» завершает текущий цикл и сохраняет его в разделе «История циклов». Отдельную запись истории можно удалить кнопкой «×».</p>
         </div>
       </details>
