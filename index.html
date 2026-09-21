@@ -18,11 +18,11 @@
   <link rel="apple-touch-icon" href="./icons/icon-192.svg">
   <title>Пробуждение 🧡</title>
 
-  <link rel="stylesheet" href="./styles.css?v=2.0.29">
+  <link rel="stylesheet" href="./styles.css?v=2.0.30">
   <!-- PDF.js Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="./vendor/pdf.min.js?v=2.0.30"></script>
   <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = './vendor/pdf.worker.min.js?v=2.0.30';
   </script>
 </head>
 
@@ -43,7 +43,7 @@
     </div>
 
     <div class="small">
-      Начни День 1 в любой день <span class="versionLabel">v2.0.29</span>
+      Начни День 1 в любой день <span class="versionLabel">v2.0.30</span>
     </div>
 
     <div class="progress">
@@ -108,7 +108,7 @@
 
   <script src="./diagnostic.js"></script>
   <script src="./storage.js"></script>
-  <script src="./app.js?v=2.0.29" defer></script>
+  <script src="./app.js?v=2.0.30" defer></script>
 
 </body>
 

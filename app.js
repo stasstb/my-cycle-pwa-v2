@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.29";
+const APP_VERSION = "2.0.30";
 
 function showAppDialog(message, options = {}) {
   const dialog = document.getElementById("appDialog");
@@ -338,6 +338,12 @@ let activeProgram = "vulva";
 let isPDFOpen = false;
 let openDayState = null;
 let maintenanceWeeksShown = 16;
+
+Object.defineProperties(window, {
+  cycle: { configurable: true, get: () => cycle },
+  marks: { configurable: true, get: () => marks },
+  activeProgram: { configurable: true, get: () => activeProgram }
+});
 const MAINTENANCE_WEEKS_MAX = 104;
 const INSTALL_GUIDE_KEY = "probuzhdenie-install-guide-shown";
 
@@ -1481,7 +1487,6 @@ function toggleStep(key, index, value) {
 function finishDay(key, count) {
   marks[`${key}_steps`] = Array(count).fill(true);
   marks[key] = true;
-  openDayState = null;
   persistUserData();
   render();
 }
@@ -1687,7 +1692,25 @@ async function importAppDataFromFile(file) {
     cycle = parsed.cycle || null;
     marks = parsed.marks && typeof parsed.marks === "object" ? parsed.marks : {};
     cycleHistory = Array.isArray(parsed.cycleHistory) ? parsed.cycleHistory : [];
-    activeProgram = parsed.activeProgram || activeProgram;
+
+    if (parsed.activeProgram && !programById(parsed.activeProgram)) {
+      throw new Error("Неизвестная программа в резервной копии");
+    }
+
+    if (cycle) {
+      if (typeof cycle !== "object" || typeof cycle.start !== "string" || !programById(cycle.programId)) {
+        throw new Error("Некорректный текущий цикл в резервной копии");
+      }
+      cycle.startedProgramId = cycle.startedProgramId || cycle.programId;
+    }
+
+    cycleHistory.forEach(item => {
+      if (!item || typeof item !== "object" || !programById(item.programId)) {
+        throw new Error("Некорректная история циклов в резервной копии");
+      }
+    });
+
+    activeProgram = parsed.activeProgram || cycle?.programId || activeProgram;
 
     if (parsed.maintenanceWeeksShown && typeof parsed.maintenanceWeeksShown === "number") {
       maintenanceWeeksShown = Math.min(parsed.maintenanceWeeksShown, MAINTENANCE_WEEKS_MAX);
@@ -1885,7 +1908,7 @@ function initializeReminders() {
 
   scheduleDailyReminder(9, 0, () => {
     const context = todayReminderContext();
-    if (!context.program) return null;
+    if (!context.program || !context.isPractice) return null;
     return {
       title: `День ${context.day}! Доброе утро!`,
       options: {
