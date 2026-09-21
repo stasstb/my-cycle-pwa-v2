@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.28";
+const APP_VERSION = "2.0.29";
 
 function showAppDialog(message, options = {}) {
   const dialog = document.getElementById("appDialog");
@@ -54,7 +54,7 @@ function registerPWA() {
   const register = async () => {
     try {
       const registration = await navigator.serviceWorker.register(
-        "./sw.js",
+        `./sw.js?v=${APP_VERSION}`,
         { updateViaCache: "none" }
       );
 
@@ -93,6 +93,15 @@ function registerPWA() {
           .then(activateWaitingWorker)
           .catch(error => {
             console.warn("PWA update check failed:", error);
+          });
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState !== "visible") return;
+        registration.update()
+          .then(activateWaitingWorker)
+          .catch(error => {
+            console.warn("PWA foreground update check failed:", error);
           });
       });
     } catch (error) {
