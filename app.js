@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.30";
+const APP_VERSION = "2.0.31";
 
 function showAppDialog(message, options = {}) {
   const dialog = document.getElementById("appDialog");

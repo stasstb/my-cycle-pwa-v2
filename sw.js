@@ -1,4 +1,4 @@
-const APP_VERSION = "2.0.30";
+const APP_VERSION = "2.0.31";
 const CACHE_NAME = `miy-cykl-${APP_VERSION}`;
 
 const PRECACHE = [
