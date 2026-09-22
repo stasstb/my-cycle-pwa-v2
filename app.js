@@ -654,13 +654,18 @@ function togglePause() {
     cycle.pauseStart = todayISO();
     cycle.pausedDayNumber = currentDay();
   } else {
-    const pausedDayNumber = Math.max(
-      1,
-      Number(cycle.pausedDayNumber || currentDay())
+    const resumeDate = todayISO();
+    const pauseStartDate = cycle.pauseStart || resumeDate;
+
+    // Keep the original cycle start intact and accumulate the total number of
+    // skipped calendar days. Resetting to 0 here makes the cycle drift after
+    // every pause/resume cycle.
+    const pauseLength = Math.max(
+      0,
+      diffDaysISO(pauseStartDate, resumeDate)
     );
 
-    cycle.start = addDaysISO(todayISO(), -pausedDayNumber);
-    cycle.pausedDays = 0;
+    cycle.pausedDays = Math.max(0, (cycle.pausedDays || 0) + pauseLength);
     cycle.paused = false;
     cycle.pauseStart = null;
     cycle.pausedDayNumber = null;
