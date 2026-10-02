@@ -202,8 +202,10 @@ h1 {
 }
 
 h2 {
-  margin: 0 0 5px;
-  font-size: 20px;
+  margin: 0 0 6px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .orange {
@@ -337,8 +339,9 @@ button {
   border: 1px solid #e1dde2;
   background: white;
   border-radius: 999px;
-  padding: 9px 13px;
-  font-size: 12px;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .tabs button.active {
@@ -347,9 +350,10 @@ button {
 }
 
 .description {
-  color: #77727a;
-  font-size: 13px;
-  line-height: 1.45;
+  color: #4d454c;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .legend {
@@ -415,14 +419,15 @@ button {
 
 .day strong {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .dayDate {
   margin-top: 4px;
   color: #77727a;
-  font-size: 10px;
-  font-weight: 650;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .day.today {
@@ -517,7 +522,8 @@ button {
 
 .dayName {
   margin-top: 7px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 900;
   line-height: 1.15;
 }
 
@@ -533,8 +539,10 @@ button {
 }
 
 .minutes {
-  color: #77727a;
+  color: #5c535d;
   margin-top: 3px;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .day.vulva {
@@ -735,8 +743,8 @@ button {
   background: white;
   border-radius: 999px;
   padding: 8px 12px;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .weekdayBtn.active {
@@ -760,9 +768,9 @@ button {
 }
 
 .weekLabel {
-  font-size: 12px;
-  font-weight: 700;
-  color: #77727a;
+  font-size: 13px;
+  font-weight: 800;
+  color: #5d5257;
   margin-bottom: 6px;
 }
 
@@ -821,7 +829,8 @@ button {
 
 .historyToggle strong {
   display: block;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 800;
 }
 
 .historyToggle span {

@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.31";
+const APP_VERSION = "2.0.32";
 
 function showAppDialog(message, options = {}) {
   const dialog = document.getElementById("appDialog");
@@ -657,12 +657,12 @@ function togglePause() {
     const resumeDate = todayISO();
     const pauseStartDate = cycle.pauseStart || resumeDate;
 
-    // Keep the original cycle start intact and accumulate the total number of
-    // skipped calendar days. Resetting to 0 here makes the cycle drift after
-    // every pause/resume cycle.
+    // The paused day itself is already the current day in the app. When
+    // resuming, the counter should continue from the next calendar day, not
+    // keep the same number of the paused day.
     const pauseLength = Math.max(
       0,
-      diffDaysISO(pauseStartDate, resumeDate)
+      diffDaysISO(pauseStartDate, resumeDate) - 1
     );
 
     cycle.pausedDays = Math.max(0, (cycle.pausedDays || 0) + pauseLength);
