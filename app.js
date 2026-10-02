@@ -2,7 +2,7 @@
    APP VERSION / PWA UPDATE
    ========================= */
 
-const APP_VERSION = "2.0.32";
+const APP_VERSION = "2.0.33";
 
 function showAppDialog(message, options = {}) {
   const dialog = document.getElementById("appDialog");
@@ -623,7 +623,7 @@ function currentDay() {
 
 function programSlotDate(id, index) {
   if (!cycle) return null;
-  return addDaysISO(programStartDate(id), index);
+  return addDaysISO(programStartDate(id), index + (cycle.pausedDays || 0));
 }
 
 function markKeyForProgram(id, index) {
